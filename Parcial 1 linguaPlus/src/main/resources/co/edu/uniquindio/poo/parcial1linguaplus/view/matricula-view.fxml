@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="12" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="co.edu.uniquindio.poo.parcial1linguaplus.controller.MatriculaController">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <Label text="Registro de matricula" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+    <GridPane hgap="10" vgap="10">
+        <columnConstraints>
+            <ColumnConstraints minWidth="150"/>
+            <ColumnConstraints minWidth="220"/>
+            <ColumnConstraints minWidth="150"/>
+            <ColumnConstraints minWidth="220"/>
+        </columnConstraints>
+
+        <Label text="Estudiante:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="comboEstudiante" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Programa:" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+        <ComboBox fx:id="comboPrograma" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+
+        <Label text="Docente tutor (opcional):" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="comboDocente" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Fecha de inicio:" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+        <DatePicker fx:id="datePickerInicio" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+
+        <Label text="Descuento (%):" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtDescuento" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Formato de comprobante:" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+        <ComboBox fx:id="comboFormato" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
+
+        <Label text="Observaciones:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtObservaciones" GridPane.rowIndex="3" GridPane.columnIndex="1" GridPane.columnSpan="3"/>
+    </GridPane>
+
+    <Label text="Servicios adicionales (selecciona uno o varios):"/>
+    <ListView fx:id="listServicios" prefHeight="90"/>
+
+    <HBox spacing="10">
+        <Button text="Registrar matricula y generar comprobante" onAction="#registrarMatricula"/>
+        <Button text="Limpiar" onAction="#limpiarFormulario"/>
+    </HBox>
+
+    <Label text="Comprobante generado:"/>
+    <TextArea fx:id="areaResultado" editable="false" prefHeight="100"/>
+
+    <TableView fx:id="tablaMatriculas" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colNumero" text="N. matricula" prefWidth="90"/>
+            <TableColumn fx:id="colEstudiante" text="Estudiante" prefWidth="180"/>
+            <TableColumn fx:id="colPrograma" text="Programa" prefWidth="150"/>
+            <TableColumn fx:id="colFecha" text="Fecha inicio" prefWidth="100"/>
+            <TableColumn fx:id="colTotal" text="Valor total" prefWidth="100"/>
+        </columns>
+    </TableView>
+</VBox>

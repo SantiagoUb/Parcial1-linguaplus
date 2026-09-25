@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="15" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="co.edu.uniquindio.poo.parcial1linguaplus.controller.ProgramaController">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <Label text="Registro de programas" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+    <GridPane hgap="10" vgap="10">
+        <columnConstraints>
+            <ColumnConstraints minWidth="130"/>
+            <ColumnConstraints minWidth="180"/>
+            <ColumnConstraints minWidth="130"/>
+            <ColumnConstraints minWidth="180"/>
+        </columnConstraints>
+
+        <Label text="Tipo de programa:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="comboTipo" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Codigo:" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+        <TextField fx:id="txtCodigo" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+
+        <Label text="Nombre:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtNombre" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Idioma:" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+        <TextField fx:id="txtIdioma" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+
+        <Label text="Descripcion:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtDescripcion" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Duracion (meses):" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+        <TextField fx:id="txtDuracion" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
+
+        <Label text="Valor mensual:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtValorMensual" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <Label text="Modalidad:" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
+        <ComboBox fx:id="comboModalidad" GridPane.rowIndex="3" GridPane.columnIndex="3"/>
+
+        <Label text="Estado:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="comboEstado" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <TitledPane fx:id="paneDatosPersonalizado" text="Datos de programa personalizado" disable="true" expanded="true">
+        <GridPane hgap="10" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints minWidth="170"/>
+                <ColumnConstraints minWidth="220"/>
+            </columnConstraints>
+
+            <Label text="Sesiones con tutor:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtSesionesTutor" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+            <Label text="Nivel de idioma requerido:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtNivelIdioma" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <Label text="Objetivos del estudiante:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtObjetivos" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        </GridPane>
+    </TitledPane>
+
+    <HBox spacing="10">
+        <Button text="Registrar" onAction="#registrarPrograma"/>
+        <Button text="Limpiar" onAction="#limpiarFormulario"/>
+    </HBox>
+
+    <TableView fx:id="tablaProgramas" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colCodigo" text="Codigo" prefWidth="80"/>
+            <TableColumn fx:id="colNombre" text="Nombre" prefWidth="150"/>
+            <TableColumn fx:id="colIdioma" text="Idioma" prefWidth="90"/>
+            <TableColumn fx:id="colDuracion" text="Duracion" prefWidth="80"/>
+            <TableColumn fx:id="colValorMensual" text="Valor mensual" prefWidth="100"/>
+            <TableColumn fx:id="colEstado" text="Estado" prefWidth="90"/>
+            <TableColumn fx:id="colValorBase" text="Valor base total" prefWidth="110"/>
+        </columns>
+    </TableView>
+</VBox>

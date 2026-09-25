@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="15" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="co.edu.uniquindio.poo.parcial1linguaplus.controller.EstudianteController">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <Label text="Registro de estudiantes" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+    <GridPane hgap="10" vgap="10">
+        <columnConstraints>
+            <ColumnConstraints minWidth="120"/>
+            <ColumnConstraints minWidth="200"/>
+            <ColumnConstraints minWidth="120"/>
+            <ColumnConstraints minWidth="200"/>
+        </columnConstraints>
+
+        <Label text="Documento:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtDocumento" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Nombre completo:" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+        <TextField fx:id="txtNombre" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+
+        <Label text="Telefono:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtTelefono" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Correo electronico:" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+        <TextField fx:id="txtCorreo" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+
+        <Label text="Edad:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtEdad" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <HBox spacing="10">
+        <Button text="Registrar" onAction="#registrarEstudiante"/>
+        <Button text="Actualizar seleccionado" onAction="#actualizarSeleccionado"/>
+        <Button text="Limpiar" onAction="#limpiarFormulario"/>
+    </HBox>
+
+    <TableView fx:id="tablaEstudiantes" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colDocumento" text="Documento" prefWidth="120"/>
+            <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200"/>
+            <TableColumn fx:id="colTelefono" text="Telefono" prefWidth="120"/>
+            <TableColumn fx:id="colCorreo" text="Correo" prefWidth="200"/>
+            <TableColumn fx:id="colEdad" text="Edad" prefWidth="60"/>
+        </columns>
+    </TableView>
+</VBox>
