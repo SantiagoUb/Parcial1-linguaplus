@@ -1,0 +1,385 @@
+@startuml LinguaPlus
+
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+hide empty members
+
+' ==========================================================
+' PAQUETE model
+' ==========================================================
+package "model" {
+
+    class Academia <<Singleton>> {
+        - {static} instance : Academia
+        - nombreComercial : String
+        - nit : String
+        - direccion : String
+        - telefono : String
+        - correoElectronico : String
+        - paginaWeb : String
+        - consecutivoMatricula : AtomicInteger
+        - Academia()
+        + {static} getInstance() : Academia
+        + configurarDatosBasicos(...)
+        + generarNumeroMatricula() : int
+        + registrarEstudiante(e : Estudiante)
+        + registrarDocente(d : Docente)
+        + registrarPrograma(p : Programa)
+        + registrarServicioAdicional(s : ServicioAdicional)
+        + registrarMatricula(m : Matricula)
+        + emitirMatricula(matricula, factory : ComprobanteFactory) : String
+        + buscarEstudiantePorTelefono(telefono : String) : Optional<ResultadoConcultaTelefono>
+        + {static} esNumeroPerfecto(numeroTexto : String) : boolean
+        + calcularIngresosPorPeriodo(desde, hasta : LocalDate) : double
+        + getEstudiantes() : List<Estudiante>
+        + getDocentes() : List<Docente>
+        + getProgramas() : List<Programa>
+        + getServiciosAdicionales() : List<ServicioAdicional>
+        + getMatriculas() : List<Matricula>
+    }
+
+    class "Academia.ResultadoConcultaTelefono" as ResultadoConcultaTelefono {
+        + estudiante : Estudiante
+        + esNumeroPrefecto : boolean
+    }
+
+    class Estudiante {
+        - documentoIdentidad : String
+        - nombreCompleto : String
+        - telefono : String
+        - correoElectronico : String
+        - edad : int
+        - fechaRegistro : LocalDate
+        + Estudiante(documentoIdentidad, nombreCompleto, telefono, correoElectronico, edad)
+        + getters/setters()
+    }
+
+    class Docente {
+        - identificacion : String
+        - nombre : String
+        - idiomaEspecialidad : String
+        - telefono : String
+        - tarifaPorSesion : double
+        + Docente(...)
+        + getters()
+    }
+
+    class ServicioAdicional {
+        - codigo : String
+        - nombre : String
+        - descripcion : String
+        - precio : double
+        - disponible : boolean
+        + getters/setters()
+    }
+
+    enum Modalidad {
+        PRESENCIAL
+        VIRTUAL
+    }
+
+    enum EstadoPrograma {
+        ACTIVO
+        INACTIVO
+        FINALIZADO
+    }
+
+    class Matricula <<Builder Product>> {
+        - numeroMatricula : int
+        - estudiante : Estudiante
+        - programa : Programa
+        - fechaInicio : LocalDate
+        - docenteTutor : Docente
+        - serviciosAdicionales : List<ServicioAdicional>
+        - descuentoPorcentaje : double
+        - observaciones : String
+        - Matricula(builder : Builder)
+        + {static} builder(numeroMatricula, estudiante, programa, fechaInicio) : Builder
+        + calcularValorTotal() : double
+        + getters()
+    }
+
+    class "Matricula.Builder" as MatriculaBuilder <<Builder>> {
+        - numeroMatricula : int
+        - estudiante : Estudiante
+        - programa : Programa
+        - fechaInicio : LocalDate
+        - docenteTutor : Docente
+        - serviciosAdicionales : List<ServicioAdicional>
+        - descuentoPorcentaje : double
+        - observaciones : String
+        + conDocente(docente) : Builder
+        + conServicioAdicional(servicio) : Builder
+        + conDescuentoPorcentaje(valor) : Builder
+        + conObservaciones(obs) : Builder
+        + build() : Matricula
+    }
+}
+
+' ==========================================================
+' PAQUETE model.programa
+' ==========================================================
+package "model.programa" {
+
+    abstract class Programa {
+        # codigo : String
+        # nombre : String
+        # idioma : String
+        # descripcion : String
+        # duracionMeses : int
+        # valorMensual : double
+        # estado : EstadoPrograma
+        # modalidad : Modalidad
+        + calcularValorBase() : double
+        + getters()/setEstado()
+    }
+
+    class ProgramaBasico {
+        + ProgramaBasico(...)
+        + getTipo() : String
+    }
+
+    class ProgramaIntensivo {
+        - {static} RECARGO_INTENSIVO : double = 1.20
+        + ProgramaIntensivo(...)
+        + calcularValorBase() : double
+        + getTipo() : String
+    }
+
+    class ProgramaPersonalizado {
+        - cantidadSesionesTutor : int
+        - nivelIdiomaRequerido : String
+        - objetivosEstudiante : String
+        - ProgramaPersonalizado()
+        + calcularValorBase() : double
+        + getTipo() : String
+        + getters()
+    }
+
+    class "ProgramaPersonalizado.Builder" as ProgramaPersonalizadoBuilder <<Builder>> {
+        - programa : ProgramaPersonalizado
+        + codigo(codigo) : Builder
+        + nombre(nombre) : Builder
+        + idioma(idioma) : Builder
+        + descripcion(descripcion) : Builder
+        + duracionMeses(meses) : Builder
+        + valorMensual(valor) : Builder
+        + estado(estado) : Builder
+        + modalidad(modalidad) : Builder
+        + cantidadSesionesTutor(sesiones) : Builder
+        + nivelIdiomaRequerido(nivel) : Builder
+        + objetivosEstudiante(objetivos) : Builder
+        + build() : ProgramaPersonalizado
+    }
+
+    abstract class ProgramaFactory <<Creator>> {
+        + {abstract} crearPrograma(datos : DatosPrograma) : Programa
+        + registrarPrograma(datos : DatosPrograma) : Programa
+    }
+
+    class "ProgramaFactory.DatosPrograma" as DatosPrograma <<DTO>> {
+        + codigo : String
+        + nombre : String
+        + idioma : String
+        + descripcion : String
+        + duracionMeses : int
+        + valorMensual : double
+        + estado : EstadoPrograma
+        + modalidad : Modalidad
+        + cantidadSesionesTutor : int
+        + nivelIdiomaRequerido : String
+        + objetivosEstudiante : String
+    }
+
+    class ProgramaBasicoFactory {
+        + crearPrograma(d : DatosPrograma) : Programa
+    }
+    class ProgramaIntensivoFactory {
+        + crearPrograma(d : DatosPrograma) : Programa
+    }
+    class ProgramaPersonalizadoFactory {
+        + crearPrograma(d : DatosPrograma) : Programa
+    }
+}
+
+Programa <|-- ProgramaBasico
+Programa <|-- ProgramaIntensivo
+Programa <|-- ProgramaPersonalizado
+Programa "1" ..> "1" Modalidad
+Programa "1" ..> "1" EstadoPrograma
+ProgramaPersonalizado +-- ProgramaPersonalizadoBuilder
+ProgramaPersonalizadoBuilder ..> ProgramaPersonalizado : crea >
+
+ProgramaFactory <|-- ProgramaBasicoFactory
+ProgramaFactory <|-- ProgramaIntensivoFactory
+ProgramaFactory <|-- ProgramaPersonalizadoFactory
+ProgramaFactory +-- DatosPrograma
+ProgramaFactory ..> Programa : crea >
+ProgramaPersonalizadoFactory ..> ProgramaPersonalizadoBuilder : usa >
+
+' ==========================================================
+' PAQUETE model.comprobante
+' ==========================================================
+package "model.comprobante" {
+
+    abstract class Comprobante {
+        # matricula : Matricula
+        + {abstract} generar() : String
+        + {abstract} getFormato() : String
+    }
+
+    class ComprobantePdf {
+        + generar() : String
+        + getFormato() : String
+    }
+
+    class ComprobanteExel {
+        + generar() : String
+        + getFormato() : String
+    }
+
+    abstract class ComprobanteFactory <<Creator>> {
+        + {abstract} generarComprobante(matricula : Matricula) : Comprobante
+        + emitirComprobante(matricula : Matricula) : String
+    }
+
+    class ComprobantePdfFactory {
+        + generarComprobante(matricula) : Comprobante
+    }
+
+    class ComprobanteExelFactory {
+        + generarComprobante(matricula) : Comprobante
+    }
+}
+
+Comprobante <|-- ComprobantePdf
+Comprobante <|-- ComprobanteExel
+ComprobanteFactory <|-- ComprobantePdfFactory
+ComprobanteFactory <|-- ComprobanteExelFactory
+ComprobanteFactory ..> Comprobante : crea >
+Comprobante "*" --> "1" Matricula
+
+' ==========================================================
+' PAQUETE model.material  (Abstract Factory)
+' ==========================================================
+package "model.material" {
+
+    interface MaterialFormativo {
+        + describir() : String
+    }
+
+    interface Carne {
+        + describri() : String
+    }
+
+    class MaterialImpreso {
+        - programa : String
+        + describir() : String
+    }
+
+    class LicenciaPlataforma {
+        - programa : String
+        + describir() : String
+    }
+
+    class CarneFisico {
+        - estudiante : String
+        + describri() : String
+    }
+
+    class CarneDigital {
+        - estudiante : String
+        + describri() : String
+    }
+
+    interface MaterialAcademicoFactory <<AbstractFactory>> {
+        + crearMaterialFormativo(programa : String) : MaterialFormativo
+        + crearCarne(estudiante : String) : Carne
+    }
+
+    class MaterialPresencialFactory {
+        + crearMaterialFormativo(programa) : MaterialFormativo
+        + crearCarne(estudiante) : Carne
+    }
+
+    class MaterialVirtualFactory {
+        + crearMaterialFormativo(programa) : MaterialFormativo
+        + crearCarne(estudiante) : Carne
+    }
+
+    class MaterialAcademicoFactoryProvider {
+        - MaterialAcademicoFactoryProvider()
+        + {static} obtenerFactory(modalidad : Modalidad) : MaterialAcademicoFactory
+    }
+}
+
+MaterialFormativo <|.. MaterialImpreso
+MaterialFormativo <|.. LicenciaPlataforma
+Carne <|.. CarneFisico
+Carne <|.. CarneDigital
+MaterialAcademicoFactory <|.. MaterialPresencialFactory
+MaterialAcademicoFactory <|.. MaterialVirtualFactory
+MaterialPresencialFactory ..> MaterialImpreso : crea >
+MaterialPresencialFactory ..> CarneFisico : crea >
+MaterialVirtualFactory ..> LicenciaPlataforma : crea >
+MaterialVirtualFactory ..> CarneDigital : crea >
+MaterialAcademicoFactoryProvider ..> MaterialAcademicoFactory : provee >
+MaterialAcademicoFactoryProvider ..> Modalidad
+
+' ==========================================================
+' PAQUETE model.oferta (Prototype)
+' ==========================================================
+package "model.oferta" {
+
+    class Horario <<Cloneable>> {
+        - dia : String
+        - horaInicio : int
+        - horaFin : int
+        + clone() : Horario
+        + getters()
+    }
+
+    class CupoPrograma <<Cloneable>> {
+        - codigoPrograma : String
+        - cuposTotales : int
+        - cuposOcupados : int
+        + ocuparCupo() : boolean
+        + clone() : CupoPrograma
+        + getCuposDisponibles() : int
+    }
+
+    class OfertaAcademica <<Cloneable, Prototype>> {
+        - periodo : String
+        - fechaApertura : LocalDate
+        - horarios : List<Horario>
+        - cupos : List<CupoPrograma>
+        + clone() : OfertaAcademica
+        + nuervoPeriodo(nuevoPeriodo, nuevaFecha) : OfertaAcademica
+        + agregarHorario(horario)
+        + agregarCupo(cupo)
+        + getters()
+    }
+}
+
+OfertaAcademica "1" *-- "*" Horario
+OfertaAcademica "1" *-- "*" CupoPrograma
+
+' ==========================================================
+' RELACIONES ENTRE PAQUETES (asociaciones principales)
+' ==========================================================
+Academia +-- ResultadoConcultaTelefono
+Academia "1" o-- "*" Estudiante
+Academia "1" o-- "*" Docente
+Academia "1" o-- "*" model.programa.Programa
+Academia "1" o-- "*" ServicioAdicional
+Academia "1" o-- "*" Matricula
+Academia ..> model.comprobante.ComprobanteFactory : usa >
+
+Matricula +-- MatriculaBuilder
+MatriculaBuilder ..> Matricula : crea >
+Matricula "*" --> "1" Estudiante
+Matricula "*" --> "1" model.programa.Programa
+Matricula "*" --> "0..1" Docente : docenteTutor
+Matricula "1" o-- "*" ServicioAdicional
+
+@enduml
